@@ -27,11 +27,6 @@ require('packer').startup(function(use)
 		"akinsho/toggleterm.nvim", tag = '*'
 	}
 
-	-- own register telescope picker
-	use 'git@gitlab.com:fesociety/coll_picker.git'
-	-- pres in (n)vim
-	use 'sotte/presenting.vim'
-
 	--Colors
 	use { 'norcalli/nvim-colorizer.lua' }
 
@@ -85,9 +80,6 @@ require('packer').startup(function(use)
 	--indent line lua
 	use 'lukas-reineke/indent-blankline.nvim'
 
-
-	use { 'git@github.com:lagachea/norme.nvim.git' }
-	-- null ls
 
 	-- lsp support Mason
 	use {
@@ -293,8 +285,6 @@ local options = {
 
 vim.opt.shortmess:append "c"
 vim.g.mapleader = " "
-vim.g.presenting_top_margin = 2
-vim.b.presenting_slide_separator = '----'
 
 for k, v in pairs(options) do
   vim.opt[k] = v
@@ -324,6 +314,7 @@ local hassorters, sorters = prequire('telescope.sorters')
 if not hastelescope or not hasactions or not hasbuiltin or not haspreviewers or not hassorters then
 	return false
 end
+
 telescope.setup{
 	defaults = {
 
@@ -423,7 +414,6 @@ telescope.setup{
 			hijack_netrw = true,
 			cwd_to_path = true,
 		},
-		coll_picker = {},
 	}
 }
 
@@ -431,12 +421,11 @@ telescope.load_extension('fzy_native')
 telescope.load_extension('file_browser')
 telescope.load_extension('media_files')
 telescope.load_extension('dap')
-telescope.load_extension('coll_picker')
 telescope.load_extension('ui-select')
 telescope.load_extension('telescope-tabs')
 telescope.load_extension('notify')
 
-local M = {}
+M = {}
 
 M.angular = function()
     local path = getPathOfCurrentFile()
@@ -448,22 +437,6 @@ M.angular = function()
     opts.default_text = default_text
 
     builtin.find_files(opts)
-end
-
-M.search_dotfiles = function()
-    local opts = {}
-    opts.prompt_title = "< DOTFILES >"
-    opts.cwd = "~/config/dotfiles/"
-
-    builtin.git_files(opts)
-end
-
-M.search_config = function()
-    local opts = {}
-    opts.prompt_title = "< CONFIG >"
-    opts.cwd = "~/config"
-
-    builtin.git_files(opts)
 end
 
 M.file_browser = function()
@@ -492,13 +465,6 @@ M.git_files = function()
     builtin.git_files(opts)
 end
 
-M.picker_name= function()
-    local opts = {
-		use_register_content = true
-	}
-    require("telescope").extensions.coll_picker.picker_name(opts)
-end
-
 M.live_grep = function(mode)
     local opts = {}
 	if mode == "v" then
@@ -517,16 +483,14 @@ local telescopemaps = {
 	itemgroup = 'telescope',
 	description = 'telescope mappings',
 	keymaps = {
-		{ '<leader>reg', '<cmd>lua require("plugins.telescop_setvp").picker_name()<cr>', description = 'telescope register', opts = telescopts},
-		{ '<leader>rg', '<cmd>lua require("plugins.telescop_setvp").live_grep("n")<cr>', description = 'telescope live_grep', opts = telescopts},
-		{ '<leader>dot', '<cmd>lua require("plugins.telescop_setvp").search_dotfiles()<cr>', description = 'dotfiles' , opts = telescopts},
-		{ '<leader>cfg', '<cmd>lua require("plugins.telescop_setvp").search_config()<cr>', description = 'config' , opts = telescopts},
-		{ '<leader>cd', '<cmd>lua require("plugins.telescop_setvp").file_browser()<cr>', description = 'file browser', opts = telescopts},
-		{ '<leader>ang', '<cmd>lua require("plugins.telescop_setvp").angular()<cr>', description = 'telescope angular' , opts = telescopts},
-		{ '<leader>gb', '<cmd>lua require("plugins.telescop_setvp").git_branches()<cr>', description = 'git banches', opts = telescopts},
-		{ '<leader>ggs', '<cmd>lua require("plugins.telescop_setvp").git_status()<cr>', description = 'git git statuses', opts = telescopts},
+		-- Normal Mode
+		{ '<leader>rg', '<cmd>lua M.live_grep("n")<cr>', description = 'telescope live_grep', opts = telescopts},
+		{ '<leader>cd', '<cmd>lua M.file_browser()<cr>', description = 'file browser', opts = telescopts},
+		{ '<leader>ang', '<cmd>lua M.angular()<cr>', description = 'telescope angular' , opts = telescopts},
+		{ '<leader>gb', '<cmd>lua M.git_branches()<cr>', description = 'git banches', opts = telescopts},
+		{ '<leader>ggs', '<cmd>lua M.git_status()<cr>', description = 'git git statuses', opts = telescopts},
 		{ '<C-f>', '<cmd>lua require("telescope.builtin").find_files()<cr>', description = 'find files', opts = telescopts},
-		{ '<C-g>', '<cmd>lua require("plugins.telescop_setvp").git_files()<cr>', description = 'git files', opts = telescopts},
+		{ '<C-g>', '<cmd>lua M.git_files()<cr>', description = 'git files', opts = telescopts},
 		{ '<leader>man', '<cmd>lua require("telescope.builtin").man_pages()<cr>', description = 'man pages', opts = telescopts},
 		{ '<leader>ff', '<cmd>lua require("telescope.builtin").current_buffer_fuzzy_find()<cr>', description = 'buffer fuzzy', opts = telescopts},
 		{ '<leader>btn', '<cmd>lua require("telescope.builtin").builtin()<cr>', description = 'telescope builtins' , opts = telescopts},
@@ -546,10 +510,11 @@ local telescopemaps = {
 		{ '<leader>ll', '<cmd>lua require("telescope.builtin").loclist()<cr>', description = 'location list', opts = telescopts},
 		{ '<leader>ftp', '<cmd>lua require("telescope.builtin").filetypes()<cr>', description = 'filetypes', opts = telescopts},
 		{ '<leader>sp', '<cmd>lua require("telescope.builtin").spell_suggest()<cr>', description = 'spell suggest', opts = telescopts},
+		{ '<leader>reg', '<cmd>lua require("telescope.builtin").registers()<cr>', description = 'telescope register', opts = telescopts},
 		-- Visual Mode
-		{ '<leader>vg', 'y<cmd>lua require("plugins.telescop_setvp").live_grep("v")<cr>', description = 'grep visual selection', mode = { 'v'}, opts = telescopts},
+		{ '<leader>vg', 'y<cmd>lua M.live_grep("v")<cr>', description = 'grep visual selection', mode = { 'v'}, opts = telescopts},
 		-- Insert Mode
-		{ '<c-r>', '<cmd>lua require("plugins.telescop_setvp").picker_name()<cr>', description = 'registers', mode = { 'i'}, opts = telescopts},
+		{ '<c-r>', '<cmd>lua require("telescope.builtin").registers()<cr>', description = 'registers', mode = { 'i'}, opts = telescopts},
 	}
 }
 local mapper = require"legendary"
@@ -854,23 +819,15 @@ nvim_lsp['omnisharp'].setup {
 }
 
 local null_ls = require('null-ls')
-local norme = require('norme')
 
 null_ls.setup({
     sources = {
 		null_ls.builtins.code_actions.refactoring,
 		null_ls.builtins.code_actions.gitsigns,
-		-- null_ls.builtins.diagnostics.gitlint,
-		-- null_ls.builtins.diagnostics.codespell,
 		null_ls.builtins.diagnostics.clang_check,
-		norme.diagnostics.with({
-			command = 'norminette',
-		}),
 		null_ls.builtins.completion.tags,
 		null_ls.builtins.completion.spell
     },
-	-- on_attach = function(client, bufnr)
-	-- end
 })
 
 require("mason-null-ls").setup({
@@ -929,108 +886,6 @@ require 'nvim-treesitter.configs'.setup {
     },
 
 }
-
-
-
-local Mod = {}
-
-local tbl = {}
-
-function tbl.contains(_tbl, value)
-  for _, current in pairs(_tbl) do
-    if current == value then
-      return true
-    end
-  end
-
-  return false
-end
-
-function Mod.directives()
-  local function is_one_line(range)
-    return range[1] == range[3]
-  end
-
-  local function is_range_empty_or_invalid(range)
-    if range[3] < range[1] or (is_one_line(range) and range[4] <= range[2]) then
-      return true
-    end
-
-    return false
-  end
-
-  local function make_subranges_between_children_like(node, predicate)
-    local content = { { node:range() } }
-
-    for child in node:iter_children() do
-      if predicate(child) then
-        local child_range = { child:range() }
-        local last_content_range = content[#content]
-        local first_part = {
-          last_content_range[1],
-          last_content_range[2],
-          child_range[1],
-          child_range[2],
-        }
-        local second_part = {
-          child_range[3],
-          child_range[4],
-          last_content_range[3],
-          last_content_range[4],
-        }
-        if is_range_empty_or_invalid(first_part) then
-          if not is_range_empty_or_invalid(second_part) then
-            content[#content] = second_part
-          end
-        elseif is_range_empty_or_invalid(second_part) then
-          content[#content] = first_part
-        else
-          content[#content] = first_part
-          content[#content + 1] = second_part
-        end
-      end
-    end
-
-    return content
-  end
-
-  local directives = vim.treesitter.query.list_directives()
-  if not tbl.contains(directives, "inject_without_named_children!") then
-    vim.treesitter.query.add_directive(
-      "inject_without_named_children!",
-      function(
-        match,
-        _, --[[ pattern ]]
-        _, --[[ bufnr ]]
-        predicate,
-        metadata
-      )
-        local node = match[predicate[2]]
-        metadata.content = make_subranges_between_children_like(
-          node,
-          function(child)
-            return child:named()
-          end
-        )
-      end
-    )
-  end
-
-  if not tbl.contains(directives, "inject_without_children!") then
-    vim.treesitter.query.add_directive("inject_without_children!", function(
-      match,
-      _, --[[ pattern ]]
-      _, --[[ bufnr ]]
-      predicate,
-      metadata
-    )
-      local node = match[predicate[2]]
-      metadata.content = make_subranges_between_children_like(node, function(_)
-        return true
-      end)
-    end)
-  end
-end
 
 require('lualine').setup{
     options = {
@@ -1096,7 +951,6 @@ cmp.setup({
 		-- ['<C-f>'] = cmp.mapping.scroll_docs(4),
 	}),
     sources = cmp.config.sources({
-		-- { name = 'luasnip' },
 		{ name = 'treesitter', max_item_count = 7  },
 		{ name = 'path', max_item_count = 5},
 		{ name = 'buffer', keyword_length = 4, max_item_count = 5 },
@@ -1480,38 +1334,6 @@ require("toggleterm").setup{
   },
 }
 
-local stdout = function(t, job, data, name)
-	vim.notify(name .. ' ' .. job .. ' ')
-end
-local stderr = function(t, job, data, name)
-	vim.notify(name .. ' ' .. job .. ' ')
-end
-local Terminal  = require('toggleterm.terminal').Terminal
-local custom_term = Terminal:new({
-	count = 42,
-	direction = 'vertical',
-	on_stdout = stdout,
-	on_stderr = stderr,
-})
---[[ Terminal:new {
-  cmd = string -- command to execute when creating the terminal e.g. 'top'
-  close_on_exit = bool -- close the terminal window when the process exits
-  highlights = table -- a table with highlights
-  env = table -- key:value table with environmental variables passed to jobstart()
-  clear_env = bool -- use only environmental variables from `env`, passed to jobstart()
-  on_open = fun(t: Terminal) -- function to run when the terminal opens
-  on_close = fun(t: Terminal) -- function to run when the terminal closes
-  auto_scroll = boolean -- automatically scroll to the bottom on terminal output
-  -- callbacks for processing the output
-  on_stdout = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stdout
-  on_stderr = fun(t: Terminal, job: number, data: string[], name: string) -- callback for processing output on stderr
-  on_exit = fun(t: Terminal, job: number, exit_code: number, name: string) -- function to run when terminal process exits
-} ]]
-
-function _custom_term_toggle()
-	custom_term:toggle()
-end
-
 local togtermopts = { noremap=true, silent=true}
 
 local ttkeymaps =  {
@@ -1706,5 +1528,6 @@ legendary.setup({
 	cache_path = string.format('%s/legendary/', vim.fn.stdpath('cache')),
 })
 
+return M
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
