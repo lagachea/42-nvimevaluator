@@ -139,19 +139,6 @@ require('packer').startup(function(use)
 		end
 	}
 
-
-	use {
-		'nvim-treesitter/playground',
-		-- after = 'nvim-treesitter'
-		requires = {"nvim-treesitter/nvim-treesitter"}
-	}
-
-	use {
-		'JoosepAlviste/nvim-ts-context-commentstring',
-		-- after = 'nvim-treesitter'
-		requires = {"nvim-treesitter/nvim-treesitter"}
-	}
-
 	-- Bracket
 	use {
 		'p00f/nvim-ts-rainbow',
@@ -181,6 +168,18 @@ require('packer').startup(function(use)
 			{"nvim-lua/plenary.nvim"},
 			{"nvim-treesitter/nvim-treesitter"}
 		}
+	}
+
+	use {
+		'nvim-treesitter/playground',
+		-- after = 'nvim-treesitter'
+		requires = {"nvim-treesitter/nvim-treesitter"}
+	}
+
+	use {
+		'JoosepAlviste/nvim-ts-context-commentstring',
+		-- after = 'nvim-treesitter'
+		requires = {"nvim-treesitter/nvim-treesitter"}
 	}
 
 
