@@ -560,7 +560,6 @@ require("mason-lspconfig").setup({
 	automatic_installation = true
 })
 
-require'utils'
 local dap = require'dap'
 local mapper = require'legendary'
 
@@ -715,7 +714,6 @@ require("mason-nvim-dap").setup({
 	automatic_installation = true,
 })
 
-require'utils'
 -- Custom function attached to server
 local nvim_lsp = require'lspconfig'
 local mapper = require"legendary"
@@ -1556,6 +1554,157 @@ require('gitsigns').setup({
 		map('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<cr>')
 	end
 })
+
+local hasgruvbox, gruvbox = prequire("gruvbox")
+if not hasgruvbox then
+	return
+end
+local hascolors, colors = prequire("gruvbox.palette")
+if not hascolors then
+	return
+end
+
+local borderColors = { bg = colors.dark0, fg = colors.dark0 }
+local titleColors = { bg = colors.dark0, fg = colors.gray }
+local normalColors = { bg = colors.dark0, fg = colors.light1 }
+local invertedBorderColors = { fg = colors.dark0, bg = colors.dark0 }
+local invertedNormalColors = { fg = colors.dark0, bg = colors.light1 }
+
+local overrides = {
+	TelescopeNormal = { fg = colors.gray },
+
+	TelescopePreviewBorder = borderColors,
+	TelescopePreviewNormal = normalColors,
+	-- TelescopePreviewTitle = titleColors,
+	TelescopePreviewTitle = borderColors,
+
+	TelescopePromptBorder = invertedBorderColors,
+	TelescopePromptNormal = invertedNormalColors,
+	-- TelescopePromptTitle = titleColors,
+	TelescopePromptTitle = borderColors,
+	TelescopePromptPrefix = invertedNormalColors,
+
+	TelescopeResultsBorder = borderColors,
+	TelescopeResultsNormal = normalColors,
+	-- TelescopeResultsTitle = titleColors,
+	TelescopeResultsTitle = borderColors,
+}
+
+local options = {
+  undercurl = true,
+  underline = true,
+  bold = true,
+  italic = true,
+  strikethrough = true,
+  invert_selection = true,
+  invert_signs = false,
+  invert_tabline = false,
+  invert_intend_guides = true,
+  inverse = true, -- invert background for search, diffs, statuslines and errors
+  contrast = "", -- can be "hard", "soft" or empty string
+  dim_inactive = true,
+  transparent_mode = false,
+  overrides = overrides
+}
+
+-- setup must be called before loading the colorscheme
+gruvbox.setup(options)
+
+vim.cmd("colorscheme gruvbox")
+
+local haslegendary, legendary = prequire("legendary")
+if not haslegendary then
+	return
+end
+local function termcodes(str)
+   return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+legendary.setup({
+	-- Initial keymaps to bind
+	keymaps = {
+		-- Normal Mode
+		{ '<leader>map', '<cmd>lua require("legendary").find({ filters = { require("legendary.filters").keymaps() } })<cr>', description = 'find keymaps'},
+		{ '<leader><leader><CR>', '<cmd>so ~/.config/nvim/init.lua<CR>', description = 'reload config'},
+		{ 'n', 'nzz', description = 'center on jump'},
+		{ 'N', 'Nzz', description = 'center on jump'},
+		{ 'H', 'Hzz', description = 'center on jump'},
+		{ 'M', 'Mzz', description = 'center on jump'},
+		{ 'L', 'Lzz', description = 'center on jump'},
+		{ '<leader>mm', '<cmd>WindowsMaximize<CR>', description = 'maximizer toogle'},
+		{ '<C-w>=', '<cmd>WindowsEqualize<CR>', description = 'equalize windows'},
+		{ '<leader>cht', '<cmd>Cheat<cr>', description = 'open cheat query' },
+		{ '<leader>gss', '<cmd>lua require("neogit").open({ cwd = vim.fn.expand("%:p:h") })<cr>', description = 'open neogit'},
+		{ '<leader>cb', '<cmd>lcd %:p:h<cr>', description = 'lcd to buffer'},
+		{ '<leader>sws', '<cmd>lua require("swap-split").swap()<cr>', description = 'spell suggest'},
+		{ '<leader>zsh', '<cmd>lua require"f_seashell".command_prompt()<CR>', description = 'shell++'},
+		-- Terminal Mode
+		{ '<esc>', termcodes('<C-\\><C-N>'), description = 'escape terminal', mode = { 't'}},
+	},
+	-- default opts to merge with the `opts` table
+	-- of each individual item
+	default_opts = {
+		keymaps = {
+			silent = true, -- use `silent` when creating keymaps
+			noremap = true, -- use `noremap` when creating keymaps
+		},
+		commands = {},
+		autocmds = {},
+	},
+	-- Customize the prompt that appears on your vim.ui.select() handler
+	-- Can be a string or a function that returns a string.
+	select_prompt = ' legendary.nvim ',
+	-- Character to use to separate columns in the UI
+	col_separator_char = '│',
+	-- Optionally pass a custom formatter function. This function
+	-- receives the item as a parameter and the mode that legendary
+	-- was triggered from (e.g. `function(item, mode): string[]`)
+	-- and must return a table of non-nil string values for display.
+	-- It must return the same number of values for each item to work correctly.
+	-- The values will be used as column values when formatted.
+	-- See function `default_format(item)` in
+	-- `lua/legendary/ui/format.lua` to see default implementation.
+	default_item_formatter = nil,
+	-- Include builtins by default, set to false to disable
+	include_builtin = true,
+	-- Include the commands that legendary.nvim creates itself
+	-- in the legend by default, set to false to disable
+	include_legendary_cmds = true,
+	-- Sort most recently used items to the top of the list
+	-- so they can be quickly re-triggered when opening legendary again
+	sort = {
+		most_recent_first = true,
+	},
+	which_key = {
+		-- Automatically add which-key tables to legendary
+		-- see ./doc/WHICH_KEY.md for more details
+		auto_register = false,
+		-- you can put which-key.nvim tables here,
+		-- or alternatively have them auto-register,
+		-- see ./doc/WHICH_KEY.md
+		mappings = {},
+		opts = {},
+		-- controls whether legendary.nvim actually binds they keymaps,
+		-- or if you want to let which-key.nvim handle the bindings.
+		-- if not passed, true by default
+		do_binding = false,
+	},
+	scratchpad = {
+		-- How to open the scratchpad buffer,
+		-- 'current' for current window, 'float'
+		-- for floating window
+		view = 'float',
+		-- How to show the results of evaluated Lua code.
+		-- 'print' for `print(result)`, 'float' for a floating window.
+		results_view = 'float',
+		-- Border style for floating windows related to the scratchpad
+		float_border = 'rounded',
+		-- Whether to restore scratchpad contents from a cache file
+		keep_contents = true,
+	},
+	-- Directory used for caches
+	cache_path = string.format('%s/legendary/', vim.fn.stdpath('cache')),
+})
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-
