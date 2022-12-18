@@ -434,6 +434,8 @@ cmp.setup {
     },
 }
 
+local function set_keymap(...) vim.api.nvim_set_keymap(...) end
+local opts = { noremap = true, silent = true }
 
 set_keymap('n', '<leader>tf',    '<cmd>ToggleTerm direction=float<cr>', opts)
 set_keymap('n', '<leader>tt',    '<cmd>ToggleTermToggleAll<cr>', opts)
