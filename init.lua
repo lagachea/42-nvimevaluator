@@ -55,10 +55,15 @@ require('packer').startup(function(use)
     use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } }
 
     -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
-    use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 }
+  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 }
 
-    -- Add custom plugins to packer from ~/.config/nvim/lua/custom/plugins.lua
-    local has_plugins, plugins = pcall(require, 'custom.plugins')
+  use { -- Terminal neovim
+    'akinsho/toggleterm.nvim', tag = '*', config = function()
+    require('toggleterm').setup()
+  end}
+
+  -- Add custom plugins to packer from ~/.config/nvim/lua/custom/plugins.lua
+  local has_plugins, plugins = pcall(require, 'custom.plugins')
     if has_plugins then
         plugins(use)
     end
@@ -428,6 +433,21 @@ cmp.setup {
         { name = 'luasnip' },
     },
 }
+
+
+set_keymap('n', '<leader>tf',    '<cmd>ToggleTerm direction=float<cr>', opts)
+set_keymap('n', '<leader>tt',    '<cmd>ToggleTermToggleAll<cr>', opts)
+set_keymap('n', '<leader>thc',    '<cmd>ToggleTermSendCurrentLine<cr>', opts)
+set_keymap('v', '<leader>ths',    '<cmd>ToggleTermSendVisualSelection<cr>', opts)
+set_keymap('v', '<leader>thv',    '<cmd>ToggleTermSendVisualLines<cr>', opts)
+set_keymap('n', '<leader>tv',   '<cmd>ToggleTerm size=80 direction=vertical<cr>', opts)
+set_keymap('t', '<C-h>',        '<cmd>wincmd h<CR>', opts)
+set_keymap('t', '<C-j>',        '<cmd>wincmd j<CR>', opts)
+set_keymap('t', '<C-k>',        '<cmd>wincmd k<CR>', opts)
+set_keymap('t', '<C-l>',        '<cmd>wincmd l<CR>', opts)
+set_keymap('t', '<Esc>',        '<C-\\><C-n>', opts)
+set_keymap('t', 'jk',        '<C-\\><C-n>', opts)
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
