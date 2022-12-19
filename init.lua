@@ -449,8 +449,6 @@ local telescopemaps = {
 	keymaps = {
 		{ '<leader>reg', function() require("telescope.builtin").registers() end, description = 'telescope register', opts = telescopts},
 		{ '<leader>rg', function() require("telescope.builtin").live_grep() end, description = 'telescope live_grep', opts = telescopts},
-		{ '<leader>dot', function() M.search_dotfiles() end, description = 'dotfiles' , opts = telescopts},
-		{ '<leader>cfg', function() M.search_config() end, description = 'config' , opts = telescopts},
 		{ '<leader>cd', function() M.file_browser() end, description = 'file browser', opts = telescopts},
 		{ '<leader>ang', function() M.angular() end, description = 'telescope angular' , opts = telescopts},
 		{ '<leader>gb', function() M.git_branches() end, description = 'git banches', opts = telescopts},
