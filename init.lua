@@ -17,7 +17,6 @@ require('packer').startup(function(use)
 	}
 
 	--Tmux
-
 	use {
 		"aserowy/tmux.nvim",
 	}
@@ -213,10 +212,6 @@ end
 
 function map(...)
     vim.api.nvim_set_keymap(...)
-end
-
-function unmap(...)
-	vim.api.nvim_del_keymap(...)
 end
 
 function create_command(...)
