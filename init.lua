@@ -206,14 +206,6 @@ function prequire(req_name)
 	return status, required
 end
 
-function bufmap(...)
-    vim.api.nvim_buf_set_keymap(0, ...)
-end
-
-function map(...)
-    vim.api.nvim_set_keymap(...)
-end
-
 function create_command(...)
 	vim.api.nvim_create_user_command(...)
 end
@@ -411,18 +403,6 @@ telescope.load_extension('notify')
 
 M = {}
 
-M.angular = function()
-    local path = getPathOfCurrentFile()
-    local default_text = vim.fn.expand("%:t:r")
-
-    local opts = {}
-    opts.prompt_title = "angular"
-    opts.cwd = path
-    opts.default_text = default_text
-
-    builtin.find_files(opts)
-end
-
 M.file_browser = function()
     local opts = {
 		cwd = getPathOfCurrentFile()
@@ -470,7 +450,6 @@ local telescopemaps = {
 		-- Normal Mode
 		{ '<leader>rg', '<cmd>lua M.live_grep("n")<cr>', description = 'telescope live_grep', opts = telescopts},
 		{ '<leader>cd', '<cmd>lua M.file_browser()<cr>', description = 'file browser', opts = telescopts},
-		{ '<leader>ang', '<cmd>lua M.angular()<cr>', description = 'telescope angular' , opts = telescopts},
 		{ '<leader>gb', '<cmd>lua M.git_branches()<cr>', description = 'git banches', opts = telescopts},
 		{ '<leader>ggs', '<cmd>lua M.git_status()<cr>', description = 'git git statuses', opts = telescopts},
 		{ '<C-f>', '<cmd>lua require("telescope.builtin").find_files()<cr>', description = 'find files', opts = telescopts},
@@ -1257,7 +1236,6 @@ local ttkeymaps =  {
 			{ '<leader>tsh', '<cmd>ToggleTerm direction=tab<CR>', description = 'tab terminal'},
 			{ '<leader>lsh', '<cmd>ToggleTermSendCurrentLine<CR>', description = 'send line to terminal'},
 			{ '<leader><leader>sh', '<cmd>ToggleTermToggleAll<CR>', description = 'toggle terminal'},
-			-- { '<leader>csh', '<cmd>lua _custom_term_toggle()<CR>', description = 'toggle custom terminal'}
 		}
 	}
 }
