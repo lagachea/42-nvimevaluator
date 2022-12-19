@@ -56,11 +56,6 @@ require('packer').startup(function(use)
 	-- Theme
 	use {'ellisonleao/gruvbox.nvim'}
 
-	use {
-		'mechatroner/rainbow_csv',
-		ft = 'csv'
-	}
-
 	use ({
 		'hrsh7th/nvim-cmp',
 		{'hrsh7th/cmp-nvim-lsp', requires = { 'neovim/nvim-lspconfig' }},
@@ -142,11 +137,6 @@ require('packer').startup(function(use)
 	-- Bracket
 	use {
 		'p00f/nvim-ts-rainbow',
-		after = 'nvim-treesitter'
-	}
-
-	use {
-		'nvim-treesitter/nvim-treesitter-angular',
 		after = 'nvim-treesitter'
 	}
 
@@ -735,87 +725,14 @@ local custom_on_attach = function(_, bufnr)
 	mapper.keymaps(keymaps)
 end
 
-local typescript_on_attach = function(client, bufnr)
-	local ts_utils = require("nvim-lsp-ts-utils")
-	ts_utils.setup({})
-	ts_utils.setup_client(client)
-
-	local bufopts = { noremap=true, silent=true, buffer = bufnr}
-	local typescript_keymaps = {
-		itemgroup = 'lsp',
-		description = 'lsp',
-		keymaps = {
-			{"<leader>org", ":TSLspOrganize<CR>", description = 'angular organize imports', opts = bufopts},
-			{"<leader>frn", ":TSLspRenameFile<CR>", description = 'angular rename file', opts = bufopts},
-		}
-	}
-	mapper.keymaps(typescript_keymaps)
-
-	custom_on_attach(client, bufnr)
-end
-
-local angular_on_attach = function(client, bufnr)
-	client.server_capabilities.rename = false
-	custom_on_attach(client, bufnr)
-end
-
-
 -- SERVER REGISTER AND LOAD
-local servers = {'clangd', 'pyright', 'jsonls'} 
+local servers = {'clangd', 'pyright'} 
 for _, lsp in ipairs(servers) do
     nvim_lsp[lsp].setup {
         on_attach = custom_on_attach,
         capabilities = capabilities
     }
 end
-
-nvim_lsp['tsserver'].setup {
-    on_attach = typescript_on_attach,
-    capabilities = capabilities
-}
-
-nvim_lsp['angularls'].setup{
-    on_attach = angular_on_attach,
-    filetypes = { "typescript", "html", "css" },
-    root_dir = nvim_lsp.util.root_pattern('angular.json','.git'),
-    capabilities = capabilities
-}
-
-nvim_lsp['cssls'].setup {
-    filetypes = { "css", "scss", "less" },
-    settings = {
-        css = {
-            validate = true
-        },
-        less = {
-            validate = true
-        },
-        scss = {
-            validate = true
-        }
-    },
-    on_attach = custom_on_attach,
-    capabilities = capabilities
-}
-
-nvim_lsp['html'].setup {
-    init_options = {
-        -- configurationSection = { "html", "css", "javascript" },
-        embeddedLanguages = {
-            css = true,
-            javascript = true
-        }
-    },
-    on_attach = custom_on_attach,
-    capabilities = capabilities
-}
-
-
-nvim_lsp['omnisharp'].setup {
-    on_attach = custom_on_attach,
-    capabilities = capabilities,
-    cmd = { "omnisharp" },
-}
 
 local null_ls = require('null-ls')
 
@@ -841,7 +758,7 @@ require('Comment').setup {
 
 require 'nvim-treesitter.configs'.setup {
 
-    ensure_installed = { "c", "bash", "typescript", "html", "css", "python", "lua", "c_sharp", "json"},
+    ensure_installed = { "c", "python", "lua", "cpp"},
 
     highlight = {
         enable = true,
@@ -959,7 +876,7 @@ cmp.setup({
 })
 
 
-local filetypes = {'c', 'cpp', 'ts', 'html', 'css', 'json', 'python', 'cs'} 
+local filetypes = {'c', 'cpp', 'python'} 
 for _, ft in ipairs(filetypes) do
 	cmp.setup.filetype(ft, {
 		sources = cmp.config.sources({
