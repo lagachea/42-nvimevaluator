@@ -1,203 +1,3 @@
--- Install packer
-local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
-local is_bootstrap = false
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-    is_bootstrap = true
-    vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
-    vim.cmd [[packadd packer.nvim]]
-end
-
-require('packer').startup(function(use)
-
-	use 'wbthomason/packer.nvim'
-
-	-- notify
-	use {
-		'rcarriga/nvim-notify'
-	}
-
-	--Tmux
-	use {
-		"aserowy/tmux.nvim",
-	}
-
-	-- Terminal
-	use {
-		"akinsho/toggleterm.nvim", tag = '*'
-	}
-
-	--Colors
-	use { 'norcalli/nvim-colorizer.lua' }
-
-	use { 
-		"anuvyklack/windows.nvim",
-		requires = {
-			"anuvyklack/middleclass",
-			"anuvyklack/animation.nvim"
-		},
-	}
-	use 'xorid/swap-split.nvim'
-
-	-- Icons
-	use {
-		'nvim-lualine/lualine.nvim',
-		requires = {'kyazdani42/nvim-web-devicons', opt = true}
-	}
-	use 'nvim-tree/nvim-web-devicons'
-
-	-- AutoPair
-	use 'windwp/nvim-autopairs'  --add the lua require
-
-	-- keymap autocmd
-	use({ 'mrjones2014/legendary.nvim' })
-	use { "folke/which-key.nvim" }
-
-	-- Theme
-	use {'ellisonleao/gruvbox.nvim'}
-
-	use ({
-		'hrsh7th/nvim-cmp',
-		{'hrsh7th/cmp-nvim-lsp', requires = { 'neovim/nvim-lspconfig' }},
-		{'hrsh7th/cmp-nvim-lsp-signature-help', requires = { 'neovim/nvim-lspconfig' }},
-		'hrsh7th/cmp-buffer',
-		'hrsh7th/cmp-path',
-		'hrsh7th/cmp-nvim-lua',
-		'ray-x/cmp-treesitter',
-		'hrsh7th/cmp-cmdline',
-	})
-
-	use {
-		'numToStr/Comment.nvim'
-	}
-
-
-	--indent line lua
-	use 'lukas-reineke/indent-blankline.nvim'
-
-
-	-- lsp support Mason
-	use {
-		"williamboman/mason.nvim",
-		"williamboman/mason-lspconfig.nvim",
-		"neovim/nvim-lspconfig",
-		"jose-elias-alvarez/null-ls.nvim",
-		"jayp0521/mason-null-ls.nvim",
-	}
-
-	use {
-		"mfussenegger/nvim-dap",
-		"jayp0521/mason-nvim-dap.nvim",
-	}
-	use { 'nvim-telescope/telescope-dap.nvim'}
-	use {'theHamsta/nvim-dap-virtual-text'}
-	use { 'jbyuki/one-small-step-for-vimkind'}
-	use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
-
-	use {
-		'jose-elias-alvarez/nvim-lsp-ts-utils',
-	}
-
-	-- Telescope extension
-	use { "nvim-telescope/telescope-file-browser.nvim" }
-	use { "nvim-telescope/telescope-fzy-native.nvim" }
-	use { "nvim-telescope/telescope-media-files.nvim" }
-	use {'nvim-telescope/telescope-ui-select.nvim' }
-	use {'LukasPietzschmann/telescope-tabs' }
-
-	-- Telescope
-	use {
-		'nvim-telescope/telescope.nvim',
-		requires = {{ 'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'} }
-	}
-
-	-- Git
-	use {
-		'TimUntersberger/neogit',
-		requires = { 'sindrets/diffview.nvim', requires = {'nvim-lua/plenary.nvim'} }
-	}
-
-	use {
-		'lewis6991/gitsigns.nvim',
-	}
-
-	use { 'sindrets/diffview.nvim', requires = {{'nvim-tree/nvim-web-devicons'},{'nvim-lua/plenary.nvim'}} }
-	-- Cheat Sheet
-	use 'RishabhRD/popfix'
-	use 'RishabhRD/nvim-cheat.sh'
-
-	-- Treesitter
-	use {
-		'nvim-treesitter/nvim-treesitter',
-		run = function()
-		  pcall(require('nvim-treesitter.install').update { with_sync = true })
-		end
-	}
-
-	-- Bracket
-	use {
-		'p00f/nvim-ts-rainbow',
-		after = 'nvim-treesitter'
-	}
-
-	use {
-		'windwp/nvim-ts-autotag',
-		after = 'nvim-treesitter'
-	}
-
-	--Refactor
-	use {
-		'nvim-treesitter/nvim-treesitter-refactor',
-		after = 'nvim-treesitter'
-	}
-
-	--Refactor Primegean
-	use {
-		"ThePrimeagen/refactoring.nvim",
-		requires = {
-			{"nvim-lua/plenary.nvim"},
-			{"nvim-treesitter/nvim-treesitter"}
-		}
-	}
-
-	use {
-		'nvim-treesitter/playground',
-		-- after = 'nvim-treesitter'
-		requires = {"nvim-treesitter/nvim-treesitter"}
-	}
-
-	use {
-		'JoosepAlviste/nvim-ts-context-commentstring',
-		-- after = 'nvim-treesitter'
-		requires = {"nvim-treesitter/nvim-treesitter"}
-	}
-
-
-    if is_bootstrap then
-        require('packer').sync()
-    end
-end)
-
--- When we are bootstrapping a configuration, it doesn't
--- make sense to execute the rest of the init.lua.
---
--- You'll need to restart nvim, and then it will work.
-if is_bootstrap then
-    print '=================================='
-    print '    Plugins are being installed'
-    print '    Wait until Packer completes,'
-    print '       then restart nvim'
-    print '=================================='
-    return
-end
-
--- Automatically source and re-compile packer whenever you save this init.lua
-local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', {
-    command = 'source <afile> | PackerCompile',
-    group = packer_group,
-    pattern = vim.fn.expand '$MYVIMRC',
-})
-
 function prequire(req_name)
 	local status, required = pcall(require, req_name)
 	if not status then
@@ -270,6 +70,203 @@ end
 vim.cmd [[
 call matchadd('ColorColumn', '\%80v', 100)
 ]]
+
+-- Bootstrap
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+
+local plugins = {
+	
+	-- notify
+	'rcarriga/nvim-notify',
+
+	--Tmux
+	"aserowy/tmux.nvim",
+
+	"nvim-lua/plenary.nvim",
+
+	-- keymap autocmd
+	{ 'mrjones2014/legendary.nvim' },
+	{ "folke/which-key.nvim" },
+
+	{
+		'willothy/flatten.nvim',
+		config = true,
+		-- Ensure that it runs first to minimize delay when opening file from terminal
+		lazy = false, priority = 1001,
+	},
+
+	-- Terminal
+	{"akinsho/toggleterm.nvim", version = '*'},
+	{ 'chomosuke/term-edit.nvim', version = '1.x' },
+
+	-- own register telescope picker
+	{ url ='git@gitlab.com:fesociety/coll_picker.git' },
+	{'plagache/f_seashell.nvim', branch = "test"},
+	-- '/home/alex/doc/f_seashell.nvim'
+
+	--Colors
+	{ 'norcalli/nvim-colorizer.lua' },
+
+	{ 
+		"anuvyklack/windows.nvim",
+		dependencies = {
+			"anuvyklack/middleclass",
+			"anuvyklack/animation.nvim"
+		}
+	},
+	'xorid/swap-split.nvim',
+
+	-- Icons
+	{
+		'nvim-lualine/lualine.nvim',
+		dependencies = {'nvim-tree/nvim-web-devicons'}
+	},
+	-- 'nvim-tree/nvim-web-devicons',
+
+	-- AutoPair
+	'windwp/nvim-autopairs',
+
+	-- Theme
+	{'ellisonleao/gruvbox.nvim'},
+
+	{
+		'mechatroner/rainbow_csv',
+		ft = 'csv'
+	},
+
+	{ 'L3MON4D3/LuaSnip' },
+
+	'hrsh7th/nvim-cmp',
+	{'hrsh7th/cmp-nvim-lsp', dependencies = { 'neovim/nvim-lspconfig' }},
+	{'hrsh7th/cmp-nvim-lsp-signature-help', dependencies = { 'neovim/nvim-lspconfig' }},
+	'hrsh7th/cmp-buffer',
+	'hrsh7th/cmp-path',
+	'hrsh7th/cmp-nvim-lua',
+	'ray-x/cmp-treesitter',
+	'hrsh7th/cmp-cmdline',
+	{'saadparwaiz1/cmp_luasnip' , dependencies = { 'L3MON4D3/LuaSnip' }},
+
+	{ 'numToStr/Comment.nvim' },
+
+
+	--indent line lua
+	'lukas-reineke/indent-blankline.nvim',
+
+
+	-- lsp support Mason
+	"williamboman/mason.nvim",
+	"williamboman/mason-lspconfig.nvim",
+	"neovim/nvim-lspconfig",
+	"jayp0521/mason-null-ls.nvim",
+	"jose-elias-alvarez/null-ls.nvim",
+	{ url = 'git@github.com:lagachea/norme.nvim.git' },
+
+	"mfussenegger/nvim-dap",
+	"jayp0521/mason-nvim-dap.nvim",
+
+	{ 'nvim-telescope/telescope-dap.nvim'},
+	{'theHamsta/nvim-dap-virtual-text'},
+	{ 'jbyuki/one-small-step-for-vimkind'},
+	{ "rcarriga/nvim-dap-ui", dependencies = {"mfussenegger/nvim-dap"} },
+
+	{ 'jose-elias-alvarez/nvim-lsp-ts-utils', },
+
+	-- Telescope extension
+	{ "nvim-telescope/telescope-file-browser.nvim" },
+	{ "nvim-telescope/telescope-fzy-native.nvim" },
+	{ "nvim-telescope/telescope-media-files.nvim" },
+	{'nvim-telescope/telescope-ui-select.nvim' },
+	{'LukasPietzschmann/telescope-tabs' },
+	{'debugloop/telescope-undo.nvim' },
+	{ "DevonMorris/telescope-docker.nvim" },
+
+	-- Telescope
+	{
+		'nvim-telescope/telescope.nvim',
+		dependencies = {'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim' }
+	},
+
+	-- Git
+	{
+		'TimUntersberger/neogit',
+		dependencies = { 'sindrets/diffview.nvim' }
+	},
+
+	{ 'lewis6991/gitsigns.nvim' },
+
+	{
+		'sindrets/diffview.nvim',
+		dependencies = {'nvim-tree/nvim-web-devicons','nvim-lua/plenary.nvim'}
+	},
+	-- Cheat Sheet
+	'RishabhRD/popfix',
+	'RishabhRD/nvim-cheat.sh',
+
+	-- Treesitter
+	{
+		'nvim-treesitter/nvim-treesitter',
+		build = function()
+		  pcall(require('nvim-treesitter.install').update { with_sync = true })
+		end
+	},
+
+
+	{
+		'nvim-treesitter/playground',
+		dependencies = {"nvim-treesitter/nvim-treesitter"}
+	},
+
+	{
+		'JoosepAlviste/nvim-ts-context-commentstring',
+		dependencies = {"nvim-treesitter/nvim-treesitter"}
+	},
+
+	-- Bracket
+	{
+		'HiPhish/nvim-ts-rainbow2',
+		dependencies = {"nvim-treesitter/nvim-treesitter"}
+	},
+
+	{
+		'nvim-treesitter/nvim-treesitter-angular',
+		dependencies = {"nvim-treesitter/nvim-treesitter"}
+	},
+
+	{
+		'windwp/nvim-ts-autotag',
+		dependencies = {"nvim-treesitter/nvim-treesitter"}
+	},
+
+	--Refactor
+	{
+		'nvim-treesitter/nvim-treesitter-refactor',
+		dependencies = {"nvim-treesitter/nvim-treesitter"}
+	},
+
+	--Refactor Primegean
+	{
+		"ThePrimeagen/refactoring.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter"
+		}
+	},
+
+}
+
+require("lazy").setup(plugins)
 
 local has_notify, notify = prequire("notify")
 
