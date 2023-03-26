@@ -16,15 +16,16 @@ all: run
 run:
 	[ -f ./nvim-linux64/bin/nvim ] && NVIM_APPNAME=$(APPNAME) ./nvim-linux64/bin/nvim && printf "$(LNECLR)$(RED)\nDon't forget to [ $(PURPLE)make clean$(RED) ] when you are finish !$(WHITE)\n\n" || printf "$(LNECLR)\nYou need to run [ $(PURPLE)make install$(WHITE) ]\n\n"
 
-install:
+install: clean
 	./neovim.sh
+	./choose-config.sh
 	mkdir -p ~/.config/$(APPNAME)
-	cp init.lua ~/.config/$(APPNAME)/init.lua
+	[ ! -d config ] && cp init.lua ~/.config/$(APPNAME)/init.lua || cp -r -t ~/.config/$(APPNAME) config/*
 	printf "$(LNECLR)\n$(GREEN)[ $(PURPLE)make install $(GREEN)] was a success$(WHITE)\n\n"
 	printf "$(LNECLR)\nYou can now run [ $(PURPLE)make$(WHITE) ]\n\n           or [ $(PURPLE)make run$(WHITE) ]\n\n"
 	[ -f ./nvim-linux64/bin/nvim ] && NVIM_APPNAME=$(APPNAME) ./nvim-linux64/bin/nvim && printf "$(LNECLR)$(RED)\nDon't forget to [ $(PURPLE)make clean$(RED) ] when you are finish !$(WHITE)\n\n" || printf "$(LNECLR)\nYou need to run [ $(PURPLE)make install$(WHITE) ]\n\n"
 
 clean:
-	rm -rf nvim-linux64 ~/.local/share/$(APPNAME) ~/.config/$(APPNAME) && printf "$(LNECLR)\n$(GREEN)[ $(PURPLE)make clean $(GREEN)] was a success$(WHITE)\n\n"
+	rm -rf nvim-linux64 config ~/.local/share/$(APPNAME) ~/.config/$(APPNAME) && printf "$(LNECLR)\n$(GREEN)[ $(PURPLE)make clean $(GREEN)] was a success$(WHITE)\n\n"
 
 .SILENT: all run install clean
