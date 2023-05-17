@@ -111,11 +111,6 @@ local plugins = {
 	{"akinsho/toggleterm.nvim", version = '*'},
 	{ 'chomosuke/term-edit.nvim', version = '1.x' },
 
-	-- own register telescope picker
-	{ url ='git@gitlab.com:fesociety/coll_picker.git' },
-	{'plagache/f_seashell.nvim', branch = "test"},
-	-- '/home/alex/doc/f_seashell.nvim'
-
 	--Colors
 	{ 'norcalli/nvim-colorizer.lua' },
 
@@ -171,7 +166,6 @@ local plugins = {
 	"neovim/nvim-lspconfig",
 	"jayp0521/mason-null-ls.nvim",
 	"jose-elias-alvarez/null-ls.nvim",
-	{ url = 'git@github.com:lagachea/norme.nvim.git' },
 
 	"mfussenegger/nvim-dap",
 	"jayp0521/mason-nvim-dap.nvim",
@@ -1344,7 +1338,6 @@ legendary.setup({
 		{ '<leader>gss', function() require("neogit").open({ cwd = vim.fn.expand("%:p:h") }) end, description = 'open neogit'},
 		{ '<leader>cb', '<cmd>lcd %:p:h<cr>', description = 'lcd to buffer'},
 		{ '<leader>sws', function() require("swap-split").swap() end, description = 'spell suggest'},
-		{ '<leader>zsh', function() require"f_seashell".command_prompt() end, description = 'shell++'},
 		-- Terminal Mode
 		{ '<esc>', termcodes('<C-\\><C-N>'), description = 'escape terminal', mode = { 't'}},
 	},
