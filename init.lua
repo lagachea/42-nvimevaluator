@@ -1300,7 +1300,8 @@ local options = {
   undercurl = true,
   underline = true,
   bold = true,
-  italic = true,
+  italic = {
+  },
   strikethrough = true,
   invert_selection = true,
   invert_signs = false,

@@ -42,10 +42,11 @@ case $CONFIG in
 
 	*)
 		printf "no config found\n"
-		exit 1
+		exit 0
 		;;
 esac
 
+rm -rf config
 if [ ! -z "$SELECTED" -a "$SELECTED" != " " ]; then
 	git clone $SELECTED config
 fi
