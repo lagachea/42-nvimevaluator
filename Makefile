@@ -8,7 +8,7 @@ KBLU =  "\\033[34m"
 
 LNECLR = "\\33[2K\\r"
 
-APPNAME=tmp-nvim
+APPNAME=nvim-fmr
 
 
 all: run

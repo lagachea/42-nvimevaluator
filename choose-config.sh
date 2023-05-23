@@ -4,8 +4,8 @@ ASTRO="https://github.com/AstroNvim/AstroNvim"
 CHAD="https://github.com/NvChad/NvChad"
 LAZY="https://github.com/LazyVim/LazyVim"
 LUNAR="https://github.com/LunarVim/LunarVim"
-DEFAULT="https://gitlab.com/3rdn4x3l4/nvim-conf.git"
-NAMES=("AstroNvim: an" "NvChad: nv" "LazyVim: lz" "LunarVim: lv" "alagache: al")
+DEFAULT="https://gitlab.com/plgch/neovim_config"
+NAMES=("AstroNvim: an" "NvChad: nv" "LazyVim: lz" "LunarVim: lv" "plagache: pl")
 
 for i in "${NAMES[@]}"
 do
@@ -39,7 +39,7 @@ case $CONFIG in
 		;;
 
 
-	al)
+	pl)
 		printf "config $DEFAULT found\n"
 		SELECTED=$DEFAULT
 		;;
