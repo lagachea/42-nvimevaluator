@@ -26,6 +26,6 @@ install: clean
 	[ -f ./nvim-linux64/bin/nvim ] && NVIM_APPNAME=$(APPNAME) ./nvim-linux64/bin/nvim && printf "$(LNECLR)$(RED)\nDon't forget to [ $(PURPLE)make clean$(RED) ] when you are done !$(WHITE)\n\n" || printf "$(LNECLR)\nYou need to run [ $(PURPLE)make install$(WHITE) ]\n\n"
 
 clean:
-	rm -rf nvim-linux64 config ~/.local/state/$(APPNAME) ~/.local/share/$(APPNAME) ~/.config/$(APPNAME) && printf "$(LNECLR)\n$(GREEN)[ $(PURPLE)make clean $(GREEN)] was a success$(WHITE)\n\n"
+	rm -rf nvim-linux64 config ~/.local/state/$(APPNAME) ~/.local/share/$(APPNAME) ~/.config/$(APPNAME) ~/.cache/$(APPNAME) && printf "$(LNECLR)\n$(GREEN)[ $(PURPLE)make clean $(GREEN)] was a success$(WHITE)\n\n"
 
 .SILENT: all run install clean
