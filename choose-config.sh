@@ -4,12 +4,18 @@ ASTRO="https://github.com/AstroNvim/AstroNvim"
 CHAD="https://github.com/NvChad/NvChad"
 LAZY="https://github.com/LazyVim/LazyVim"
 LUNAR="https://github.com/LunarVim/LunarVim"
+KICKSTART="https://github.com/nvim-lua/kickstart.nvim"
 DEFAULT="https://gitlab.com/3rdn4x3l4/nvim-conf.git"
-NAMES=("AstroNvim: an" "NvChad: nv" "LazyVim: lz" "LunarVim: lv" "alagache: al")
+NAMES=("AstroNvim: an"
+	"NvChad: nv"
+	"LazyVim: lz"
+	"LunarVim: lv"
+	"kickstart: ks"
+	"alagache: al")
 
 for i in "${NAMES[@]}"
 do
-	echo "$i"
+	printf "$i\n"
 done
 
 echo -n "Enter the short name of a config [xx]: "
@@ -38,6 +44,10 @@ case $CONFIG in
 		SELECTED=$LUNAR
 		;;
 
+	ks)
+		printf "config $KICKSTART found\n"
+		SELECTED=$KICKSTART
+		;;
 
 	al)
 		printf "config $DEFAULT found\n"
@@ -45,12 +55,12 @@ case $CONFIG in
 		;;
 
 	*)
-		printf "no config found\n"
-		exit 0
+		printf "no config found defaults to kickstart\n"
+		SELECTED=$KICKSTART
 		;;
 esac
 
-rm -rf config
 if [ ! -z "$SELECTED" -a "$SELECTED" != " " ]; then
+	rm -rf config
 	git clone $SELECTED config
 fi
