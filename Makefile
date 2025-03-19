@@ -9,7 +9,7 @@ KBLU =  "\\033[34m"
 LNECLR = "\\33[2K\\r"
 
 APPNAME=tmp-nvim
-APPBIN=./nvim-linux64/bin/nvim
+APPBIN=./nvim-linux-x86_64/bin/nvim
 
 all: run
 
@@ -29,6 +29,6 @@ install: clean
 	[ -f $(APPBIN) ] && NVIM_APPNAME=$(APPNAME) $(APPBIN) && printf "$(LNECLR)$(RED)\nDon't forget to [ $(PURPLE)make clean$(RED) ] when you are done !$(WHITE)\n\n" || printf "$(LNECLR)\nYou need to run [ $(PURPLE)make install$(WHITE) ]\n\n"
 
 clean:
-	rm -rf nvim-linux64 config ~/.local/state/$(APPNAME) ~/.local/share/$(APPNAME) ~/.config/$(APPNAME) && printf "$(LNECLR)\n$(GREEN)[ $(PURPLE)make clean $(GREEN)] was a success$(WHITE)\n\n"
+	rm -rf nvim-linux-x86_64 config ~/.local/state/$(APPNAME) ~/.local/share/$(APPNAME) ~/.config/$(APPNAME) && printf "$(LNECLR)\n$(GREEN)[ $(PURPLE)make clean $(GREEN)] was a success$(WHITE)\n\n"
 
 .SILENT: all run install clean
