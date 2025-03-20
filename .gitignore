@@ -1,2 +1,5 @@
 nvim-linux-x86_64
 config
+.config
+.local
+.cache
