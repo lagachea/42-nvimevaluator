@@ -13,5 +13,4 @@ mkdir -p $XDG_CACHE_HOME
 ./neovim.sh
 ./choose-config.sh
 
-APPNAME=tmp-nvim
-ln -s ../config .config/$APPNAME
+ln -s ../config .config
