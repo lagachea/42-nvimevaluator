@@ -13,4 +13,4 @@ mkdir -p $XDG_CACHE_HOME
 ./neovim.sh
 ./choose-config.sh
 
-ln -s ../config .config
+ln -s ../config .config/nvim
