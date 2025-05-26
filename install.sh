@@ -1,14 +1,27 @@
 #!/bin/sh
 
-XDG_CONFIG_HOME=".config"
-XDG_DATA_HOME=".local/share"
-XDG_STATE_HOME=".local/state"
-XDG_CACHE_HOME=".cache"
-
-mkdir -p $XDG_CONFIG_HOME
-mkdir -p $XDG_DATA_HOME
-mkdir -p $XDG_STATE_HOME
-mkdir -p $XDG_CACHE_HOME
-
 ./neovim.sh
+APPNAME="tmp-nvim"
+
+CONFIG="config"
+SHARE="share"
+STATE="state"
+CACHE="cache"
+
+# local
 ./choose-config.sh
+mkdir -p $SHARE
+mkdir -p $STATE
+mkdir -p $CACHE
+
+
+SYSTEM_CONFIG="$HOME/.config/$APPNAME"
+SYSTEM_DATA="$HOME/.local/share/$APPNAME"
+SYSTEM_STATE="$HOME/.local/state/$APPNAME"
+SYSTEM_CACHE="$HOME/.cache/$APPNAME"
+
+#link local into home
+ln -sr $CONFIG $SYSTEM_CONFIG
+ln -sr $SHARE $SYSTEM_DATA
+ln -sr $STATE $SYSTEM_STATE
+ln -sr $CACHE $SYSTEM_CACHE

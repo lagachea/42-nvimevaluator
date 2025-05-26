@@ -61,6 +61,7 @@ case $CONFIG in
 esac
 
 if [ ! -z "$SELECTED" -a "$SELECTED" != " " ]; then
-	rm -rf config
-	git clone $SELECTED .config/nvim
+	DEST="config"
+	rm -rf $DEST
+	git clone $SELECTED $DEST
 fi

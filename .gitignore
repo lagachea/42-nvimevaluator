@@ -1,5 +1,6 @@
 nvim-linux-x86_64
 config
-.config
-.local
-.cache
+share
+state
+cache
+.nvimlog
